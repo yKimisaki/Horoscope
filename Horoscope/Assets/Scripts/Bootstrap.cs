@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class Bootstrap : MonoBehaviour
 {
     public Mesh ParticleMesh;
-    public Material ParticleMaterial;
+    public Material[] ParticleMaterials;
 
     public Vector3 Root;
     public float InitialMinSpeed = 20f;
@@ -41,8 +41,8 @@ public class Bootstrap : MonoBehaviour
 
             this._entityManager.SetSharedComponentData(particle, new MeshInstanceRenderer()
             {
-                mesh = ParticleMesh,
-                material = ParticleMaterial,
+                mesh = this.ParticleMesh,
+                material = this.ParticleMaterials[Random.Range(0, this.ParticleMaterials.Length -1)],
             });
 
             this._entityManager.SetComponentData(particle, new TransformMatrix());

@@ -298,7 +298,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 80
-  far clip plane: 2000
+  far clip plane: 5000
   field of view: 75
   orthographic: 0
   orthographic size: 5
@@ -828,7 +828,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ParticleMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
-  ParticleMaterial: {fileID: 2100000, guid: 294de4e3820192f4cb4d41fda7e3b997, type: 2}
+  ParticleMaterials:
+  - {fileID: 2100000, guid: 294de4e3820192f4cb4d41fda7e3b997, type: 2}
+  - {fileID: 2100000, guid: 23eeb7b88e2e78046ace68954273954e, type: 2}
+  - {fileID: 2100000, guid: 087876afa3dff9b4b83bca8f86e177c3, type: 2}
+  - {fileID: 2100000, guid: 6999ff1a26ebe6e4f93619e0ba0700a4, type: 2}
+  - {fileID: 2100000, guid: 7f459fd165cfe624587a6bf1cab6d2c1, type: 2}
   Root: {x: 0, y: 0, z: 0}
   InitialMinSpeed: 20
   InitialMaxSpeed: 80
