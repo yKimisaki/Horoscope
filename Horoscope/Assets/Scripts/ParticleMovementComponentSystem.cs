@@ -1,12 +1,13 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
 [UpdateAfter(typeof(MeshInstanceRendererSystem))]
-public class ParticleMovementComponentSystem : ComponentSystem
+public class ParticleMovementComponentSystem : JobComponentSystem
 {
     private struct Group
     {
@@ -17,33 +18,51 @@ public class ParticleMovementComponentSystem : ComponentSystem
         public readonly int Length;
     }
 
-    [Inject]
-    private Group _group;
-
-    protected override void OnUpdate()
+    private struct ParticleMovementJob : IJobParallelFor
     {
-        for(var i = 0; i < this._group.Length; ++i)
-        {
-            var position = this._group.Positions[i];
+        public ComponentDataArray<Position> Positions;
+        public ComponentDataArray<Rotation> Directions;
+        public ComponentDataArray<ParticleData> Particles;
 
-            var direction = this._group.Directions[i];
+        public void Execute(int i)
+        {
+            var position = this.Positions[i];
+
+            var direction = this.Directions[i];
             var dx = direction.Value.value.x;
             var dy = direction.Value.value.y;
             var dz = direction.Value.value.z;
 
-            var particle = this._group.Particles[i];
+            var particle = this.Particles[i];
             var speed = particle.Speed;
             var initialSpeed = particle.InitialSpeed;
             var axis = particle.Axis;
 
-            this._group.Positions[i] = new Position()
+            this.Positions[i] = new Position()
             {
                 Value = position.Value + new float3(dx, dy, dz) * speed,
             };
-            this._group.Particles[i] = new ParticleData()
+            this.Particles[i] = new ParticleData()
             {
                 Speed = speed * 0.9f,
             };
         }
+    }
+
+    [Inject]
+    private Group _group;
+
+    protected override JobHandle OnUpdate(JobHandle jobHandle)
+    {
+        var job = new ParticleMovementJob()
+        {
+            Positions = this._group.Positions,
+            Directions = this._group.Directions,
+            Particles = this._group.Particles,
+        };
+
+        var handle = job.Schedule(this._group.Length, 32, jobHandle);
+
+        return handle;
     }
 }
