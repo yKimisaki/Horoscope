@@ -44,7 +44,7 @@ public class ParticleMovementComponentSystem : JobComponentSystem
             };
             this.Particles[i] = new ParticleData()
             {
-                Speed = speed * 0.9f,
+                Speed = Mathf.Max(speed * 0.9f, 1f),
             };
         }
     }
@@ -54,6 +54,11 @@ public class ParticleMovementComponentSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle jobHandle)
     {
+        if (Time.smoothDeltaTime > 1f/29f)
+        {
+            return jobHandle;
+        }
+
         var job = new ParticleMovementJob()
         {
             Positions = this._group.Positions,

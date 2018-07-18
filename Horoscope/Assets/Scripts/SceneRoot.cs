@@ -22,7 +22,7 @@ public class SceneRoot : MonoBehaviour
 
     private void Update()
     {
-        this.Camera.fieldOfView = 60f - 59f * this.Slider.value;
+        this.Camera.fieldOfView = 75f - 74f * this.Slider.value;
 
         var fps = 1f / Time.smoothDeltaTime;
         if (float.IsInfinity(fps) || fps < 0)
